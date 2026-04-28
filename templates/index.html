@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Password Analyzer Pro</title>
+
+    <style>
+        body {
+            background-color: #0f172a;
+            color: white;
+            font-family: Arial;
+            text-align: center;
+            padding-top: 50px;
+        }
+
+        input {
+            padding: 10px;
+            width: 250px;
+            border-radius: 5px;
+            border: none;
+        }
+
+        button {
+            padding: 10px 20px;
+            background: #22c55e;
+            border: none;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .card {
+            margin: 30px auto;
+            padding: 20px;
+            width: 400px;
+            background: #1e293b;
+            border-radius: 10px;
+        }
+
+        .weak { color: red; }
+        .medium { color: orange; }
+        .strong { color: lightgreen; }
+
+        .bar {
+            height: 10px;
+            background: gray;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        .fill {
+            height: 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>🔐 Password Analyzer Pro</h1>
+
+    <form method="POST">
+        <input type="password" name="password" placeholder="Enter password" required>
+        <button type="submit">Analyze</button>
+    </form>
+
+    {% if result %}
+    <div class="card">
+
+        <h2 class="{{ result.strength|lower }}">
+            Strength: {{ result.strength }}
+        </h2>
+
+        <p>Entropy: {{ result.entropy }}</p>
+
+        <div class="bar">
+            <div class="fill"
+                 style="width: {{ result.entropy }}%;
+                 background:
+                 {% if result.strength == 'Weak' %} red
+                 {% elif result.strength == 'Medium' %} orange
+                 {% else %} green
+                 {% endif %};">
+            </div>
+        </div>
+
+        <p>Reused: {{ result.reused }}</p>
+        <p>Breached: {{ result.breached }}</p>
+
+        {% if result.feedback %}
+        <h3>Suggestions:</h3>
+        <ul>
+            {% for f in result.feedback %}
+                <li>{{ f }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+    </div>
+    {% endif %}
+
+</body>
+</html>
